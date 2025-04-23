@@ -91,6 +91,10 @@ def main():
     # App title
     st.header(f"Amazon Connect Contact Get Current User Tool!")
 
+    # 使用session_state来管理状态
+    if 'configuration_loaded' not in st.session_state:
+        st.session_state.configuration_loaded = False
+
     connect_instance_id = ''
     queues_selected = ''
 
@@ -107,7 +111,7 @@ def main():
     if load_button:
         with st.spinner('Loading...'):
             if load_configuration(connect_instance_id):
-                st.stop()
+                st.session_state.configuration_loaded = True
 
     # Queue configuration
     if os.path.exists('queues.csv'):
@@ -121,6 +125,7 @@ def main():
         if load_user_button:
             user_data = load_user_data(connect_instance_id, queues_selected)
             st.write(user_data)
+
 
 
 if __name__ == "__main__":
