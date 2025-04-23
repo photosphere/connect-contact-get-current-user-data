@@ -84,6 +84,20 @@ def load_user_data(connect_instance_id, queues_selected):
 
     return pd.DataFrame(user_data)
 
+def validate_queue_selection(queues_selected):
+    """
+    验证是否已选择Queue
+    
+    Args:
+        queues_selected (pd.DataFrame): 选择的Queue数据
+        
+    Returns:
+        bool: 是否通过验证
+    """
+    if queues_selected is None or queues_selected.empty:
+        st.warning('请至少选择一个Queue后再加载用户数据')
+        return False
+    return True
 
 def main():
     st.set_page_config(page_title="Amazon Connect Contact Get Current User Tool!", layout="wide")
@@ -123,8 +137,9 @@ def main():
     if os.path.exists('queues.csv'):
         load_user_button = st.button('Load Users')
         if load_user_button:
-            user_data = load_user_data(connect_instance_id, queues_selected)
-            st.write(user_data)
+            if validate_queue_selection(queues_selected):
+                user_data = load_user_data(connect_instance_id, queues_selected)
+                st.write(user_data)
 
 
 
